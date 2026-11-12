@@ -583,16 +583,37 @@ $("#spinBtn").onclick=()=>{
 };
 
 const MANAGEMENT_KEY="guigui_management_visible";
+
 function setManagementVisible(visible){
-  document.body.classList.toggle("management-hidden",!visible);
-  $("#managementToggle").textContent=visible?"⚙️ Gestion":"⚙️ Afficher la gestion";
-  localStorage.setItem(MANAGEMENT_KEY,visible?"1":"0");
+  const sidebar = document.querySelector(".sidebar");
+  const content = document.querySelector(".content");
+  const layout = document.querySelector(".layout");
+  const button = document.querySelector("#managementToggle");
+
+  if(!sidebar || !content || !layout || !button) return;
+
+  if(visible){
+    sidebar.style.display = "";
+    layout.style.gridTemplateColumns = "340px minmax(0,1fr)";
+    content.style.width = "";
+    button.textContent = "⚙️ Gestion";
+  }else{
+    sidebar.style.display = "none";
+    layout.style.gridTemplateColumns = "1fr";
+    content.style.width = "100%";
+    button.textContent = "⚙️ Afficher la gestion";
+  }
+
+  localStorage.setItem(MANAGEMENT_KEY, visible ? "1" : "0");
 }
-$("#managementToggle").onclick=()=>{
-  const visible=!document.body.classList.contains("management-hidden");
-  setManagementVisible(!visible);
+
+$("#managementToggle").onclick = function(){
+  const sidebar = document.querySelector(".sidebar");
+  const isVisible = sidebar && sidebar.style.display !== "none";
+  setManagementVisible(!isVisible);
 };
-setManagementVisible(localStorage.getItem(MANAGEMENT_KEY)!=="0");
+
+setManagementVisible(localStorage.getItem(MANAGEMENT_KEY) !== "0");
 render();
 </script>
 </body>
