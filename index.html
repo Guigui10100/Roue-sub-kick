@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#06152b">
-<title>Guigui — Roue des Subs Kick</title>
+<title>Les Roues de Guigui</title>
 <style>
 :root{
   --bg:#030914; --panel:#071a31; --panel2:#0b2341; --line:#164a7b;
@@ -40,6 +40,26 @@ button{cursor:pointer}
 .status{
   display:flex;align-items:center;gap:8px;color:#b9d7ed;font-size:12px;
   padding:8px 12px;border-radius:999px;background:rgba(15,55,91,.55);border:1px solid #174b78
+}
+.top-controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+.top-toggle{
+  border:1px solid #2abfff;
+  background:linear-gradient(135deg,#0a4772,#123b70);
+  color:#e8faff;
+  border-radius:11px;
+  padding:9px 13px;
+  font-weight:800;
+  white-space:nowrap;
+  box-shadow:0 0 18px rgba(0,155,255,.14);
+}
+.top-toggle:hover{
+  filter:brightness(1.15);
+  box-shadow:0 0 24px rgba(0,175,255,.24);
 }
 .dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success)}
 .layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;margin-top:20px}
@@ -191,9 +211,12 @@ canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:5
   <header class="topbar">
     <div class="brand">
       <img class="logo" src="logo.jpg" alt="Logo Guigui">
-      <div><h1>GUIGUI — Roue des Subs</h1><p>Tirages au sort pour tes abonnés Kick</p></div>
+      <div><h1>Les Roues de Guigui</h1><p>Tirages au sort</p></div>
     </div>
-    <div class="status"><span class="dot"></span> Sauvegarde locale active • V2</div>
+    <div class="top-controls">
+      <div class="status"><span class="dot"></span> Sauvegarde locale active • V2</div>
+      <button class="top-toggle" id="managementToggle">⚙️ Gestion</button>
+    </div>
   </header>
 
   <div class="layout">
@@ -226,7 +249,7 @@ canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:5
       <div class="hero">
         <div>
           <h2 id="currentTitle">Giveaway Kick</h2>
-          <p id="subtitle">Ajoute tes lots puis lance la roue. Les lots restent disponibles après chaque tirage.</p>
+          <p id="subtitle">Merci pour le soutien.</p>
         </div>
         <div class="actions">
           <button class="btn ghost" id="shuffleBtn">↻ Mélanger</button>
@@ -261,7 +284,7 @@ canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:5
       <section class="history panel">
         <div class="card-title">
           <h3>Historique des tirages</h3>
-          <span class="small">Conservé sur cet appareil</span>
+          <span class="small">Merci</span>
         </div>
         <div id="historyList" class="history-list"></div>
       </section>
@@ -288,11 +311,11 @@ canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:5
 <div class="winner-overlay" id="winnerOverlay">
   <div class="winner-card">
     <div class="winner-burst">✦</div>
-    <div class="winner-kicker">🎉 GAGNANT 🎉</div>
+    <div class="winner-kicker">🎉 RÉSULTAT 🎉</div>
     <div class="winner-title" id="bigWinner">—</div>
     <div class="winner-sub">Félicitations !</div>
-    <button class="winner-ok" id="winnerOk">OK — Fermer</button>
-    <div class="winner-hint">Clique en dehors ou appuie sur Échap pour fermer</div>
+    <button class="winner-ok" id="winnerOk">Fermer</button>
+    <div class="winner-hint">Clique pour fermer</div>
   </div>
 </div>
 
