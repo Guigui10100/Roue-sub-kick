@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06152b">
+<title>Guigui — Roue des Subs Kick</title>
+<style>
+:root{
+  --bg:#030914; --panel:#071a31; --panel2:#0b2341; --line:#164a7b;
+  --blue:#16bfff; --blue2:#2675ff; --cyan:#67e8ff; --gold:#f4bd4f;
+  --text:#edf8ff; --muted:#8ba9c5; --danger:#ff5570; --success:#46e6a1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(18,111,220,.30), transparent 35%),
+    radial-gradient(circle at 10% 70%, rgba(0,196,255,.10), transparent 30%),
+    linear-gradient(145deg,#020711 0%,#06152b 48%,#020711 100%);
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{max-width:1500px;margin:auto;padding:22px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:14px 18px;border:1px solid rgba(62,167,255,.35);
+  background:rgba(4,16,31,.78);backdrop-filter:blur(14px);
+  border-radius:20px;box-shadow:0 0 35px rgba(0,149,255,.08);
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{
+  width:58px;height:58px;object-fit:cover;border-radius:15px;
+  border:1px solid rgba(79,200,255,.65);box-shadow:0 0 22px rgba(0,170,255,.25);
+  background:#fff;
+}
+.brand h1{margin:0;font-size:20px;letter-spacing:.4px}
+.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.status{
+  display:flex;align-items:center;gap:8px;color:#b9d7ed;font-size:12px;
+  padding:8px 12px;border-radius:999px;background:rgba(15,55,91,.55);border:1px solid #174b78
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success)}
+.layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;margin-top:20px}
+.panel{
+  background:linear-gradient(180deg,rgba(7,27,50,.92),rgba(3,14,27,.92));
+  border:1px solid rgba(47,143,220,.30);border-radius:20px;
+  box-shadow:0 18px 60px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.025);
+}
+.sidebar{padding:18px}
+.section-title{font-size:12px;text-transform:uppercase;letter-spacing:1.3px;color:#7da7c6;margin:2px 4px 12px}
+.wheel-list{display:flex;flex-direction:column;gap:8px}
+.wheel-item{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;padding:11px 12px;border-radius:13px;border:1px solid transparent;
+  background:rgba(10,37,64,.55);color:var(--text);text-align:left;
+}
+.wheel-item:hover{border-color:#17639a;background:#0b2b4b}
+.wheel-item.active{border-color:#1aaeff;background:linear-gradient(90deg,rgba(16,129,204,.30),rgba(15,53,86,.55));box-shadow:inset 0 0 20px rgba(0,170,255,.05)}
+.wheel-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.count{font-size:11px;color:#8db6d2;background:#06182d;border-radius:999px;padding:4px 7px}
+.add-wheel{
+  width:100%;margin-top:10px;padding:12px;border-radius:13px;border:1px dashed #21618e;
+  color:#aeeaff;background:rgba(10,42,69,.35)
+}
+.add-wheel:hover{background:rgba(12,69,106,.45)}
+.manage{margin-top:20px}
+.field{margin-bottom:11px}
+label{display:block;font-size:11px;color:#91afc5;margin:0 0 6px 2px}
+input{
+  width:100%;border:1px solid #194b76;border-radius:11px;padding:10px 11px;
+  color:var(--text);background:#041429;outline:none;
+}
+input:focus{border-color:#27bfff;box-shadow:0 0 0 3px rgba(24,186,255,.08)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{
+  border:1px solid #1e5d8e;background:#092844;color:#dff7ff;
+  border-radius:11px;padding:10px 12px;font-weight:700;
+}
+.btn:hover{filter:brightness(1.12)}
+.btn.primary{
+  background:linear-gradient(135deg,#0789d8,#1f5eff);border-color:#41c9ff;
+  box-shadow:0 0 24px rgba(0,145,255,.18)
+}
+.btn.danger{border-color:#73334a;background:#351525;color:#ffc0cb}
+.btn.ghost{background:transparent}
+.content{padding:22px;min-width:0}
+.hero{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:15px
+}
+.hero h2{margin:0;font-size:27px}
+.hero p{margin:6px 0 0;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.stage{
+  display:grid;grid-template-columns:minmax(340px,1fr) 330px;gap:18px;align-items:center;
+}
+.wheel-wrap{
+  position:relative;display:grid;place-items:center;min-height:620px;
+  border:1px solid rgba(33,128,194,.25);border-radius:18px;
+  background:radial-gradient(circle,rgba(10,55,91,.28),rgba(1,10,20,.25) 65%);
+  overflow:hidden;
+}
+.wheel-wrap:before,.wheel-wrap:after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;
+}
+.wheel-wrap:before{width:540px;height:540px;border:1px solid rgba(23,184,255,.08);box-shadow:0 0 80px rgba(0,164,255,.08)}
+canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:560px;filter:drop-shadow(0 0 25px rgba(0,157,255,.18))}
+.pointer{
+  position:absolute;top:calc(50% - 292px);z-index:5;
+  width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;
+  border-top:42px solid var(--gold);filter:drop-shadow(0 3px 4px #000);
+}
+.center-label{
+  position:absolute;bottom:25px;left:50%;transform:translateX(-50%);
+  padding:8px 14px;border-radius:999px;background:rgba(2,13,27,.72);
+  border:1px solid rgba(44,159,224,.28);color:#9fc3da;font-size:11px
+}
+.side-card{padding:16px}
+.card-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title h3{margin:0;font-size:15px}
+.small{font-size:11px;color:var(--muted)}
+.prizes{display:flex;flex-direction:column;gap:7px;max-height:380px;overflow:auto;padding-right:3px}
+.prize{
+  display:grid;grid-template-columns:10px 1fr auto;gap:9px;align-items:center;
+  padding:10px;border:1px solid #123b61;border-radius:12px;background:rgba(5,25,45,.72)
+}
+.prize-color{width:10px;height:10px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.prize-name{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prize-meta{font-size:10px;color:#7799b3;margin-top:2px}
+.icon-btn{border:0;background:transparent;color:#7fa4bf;padding:4px 5px}
+.icon-btn:hover{color:white}
+.empty{
+  padding:30px 12px;text-align:center;color:#7695ad;border:1px dashed #18466d;border-radius:12px;
+}
+.spin{
+  width:100%;margin-top:14px;padding:15px;border-radius:13px;border:1px solid #43cfff;
+  color:white;font-weight:900;letter-spacing:.7px;font-size:15px;
+  background:linear-gradient(135deg,#058bd9,#225cf1);box-shadow:0 0 30px rgba(0,151,255,.22)
+}
+.spin:disabled{opacity:.45;cursor:not-allowed}
+.result{
+  margin-top:13px;padding:14px;border-radius:13px;text-align:center;
+  background:linear-gradient(135deg,rgba(12,99,155,.25),rgba(18,43,84,.38));
+  border:1px solid rgba(65,192,255,.35);min-height:73px
+}
+.result .label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#82aec8}
+.result .winner{font-size:20px;font-weight:900;color:#fff;margin-top:4px}
+.history{margin-top:18px;padding:16px}
+.history-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
+.history-row{
+  display:flex;justify-content:space-between;gap:10px;padding:9px 10px;
+  background:#06182d;border:1px solid #123a5d;border-radius:10px;font-size:12px
+}
+.history-row span:last-child{color:#6f93ad;font-size:10px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,4,10,.72);backdrop-filter:blur(6px);display:none;place-items:center;z-index:20;padding:18px}
+.modal-backdrop.show{display:grid}
+.modal{width:min(460px,100%);padding:20px;border:1px solid #1c6c9f;border-radius:18px;background:#06182c;box-shadow:0 25px 100px #000}
+.modal h3{margin:0 0 14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.toast{
+  position:fixed;right:20px;bottom:20px;z-index:50;padding:11px 15px;border-radius:12px;
+  background:#071e35;border:1px solid #1c6d9c;box-shadow:0 12px 35px #0008;
+  opacity:0;transform:translateY(10px);transition:.2s
+}
+.toast.show{opacity:1;transform:none}
+@media(max-width:1050px){.stage{grid-template-columns:1fr}.side-card{max-width:650px;margin:auto;width:100%}.wheel-wrap{min-height:570px}}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{order:2}.content{order:1}.topbar{padding:12px}.status{display:none}.hero{flex-direction:column}.actions{justify-content:flex-start}.wheel-wrap{min-height:480px}.pointer{top:calc(50% - 238px)}}
+@media(max-width:520px){.app{padding:10px}.content{padding:14px}.wheel-wrap{min-height:390px}.pointer{top:calc(50% - 180px);border-left-width:14px;border-right-width:14px;border-top-width:34px}.brand h1{font-size:17px}.logo{width:48px;height:48px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo" src="logo.jpg" alt="Logo Guigui">
+      <div><h1>GUIGUI — Roue des Subs</h1><p>Tirages au sort pour tes abonnés Kick</p></div>
+    </div>
+    <div class="status"><span class="dot"></span> Sauvegarde locale active • V2</div>
+  </header>
+
+  <div class="layout">
+    <aside class="panel sidebar">
+      <div class="section-title">Mes roues</div>
+      <div id="wheelList" class="wheel-list"></div>
+      <button class="add-wheel" id="addWheelBtn">＋ Nouvelle roue</button>
+
+      <div class="manage">
+        <div class="section-title">Roue actuelle</div>
+        <div class="field"><label for="wheelName">Nom</label><input id="wheelName" maxlength="40"></div>
+        <div class="row">
+          <button class="btn" id="renameBtn">Renommer</button>
+          <button class="btn danger" id="deleteWheelBtn">Supprimer</button>
+        </div>
+      </div>
+
+      <div class="manage">
+        <div class="section-title">Ajouter un lot</div>
+        <div class="field"><label for="prizeName">Nom du lot</label><input id="prizeName" maxlength="50" placeholder="Ex : 1 mois de sub"></div>
+        <div class="row">
+          <div class="field"><label for="prizeQty">Quantité</label><input id="prizeQty" type="number" min="1" value="1"></div>
+          <div class="field"><label for="prizeColor">Couleur</label><input id="prizeColor" type="color" value="#168fff" style="height:42px;padding:4px"></div>
+        </div>
+        <button class="btn primary" style="width:100%" id="addPrizeBtn">＋ Ajouter le lot</button>
+      </div>
+    </aside>
+
+    <main class="panel content">
+      <div class="hero">
+        <div>
+          <h2 id="currentTitle">Giveaway Kick</h2>
+          <p id="subtitle">Ajoute tes lots puis lance la roue. Les lots restent disponibles après chaque tirage.</p>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="shuffleBtn">↻ Mélanger</button>
+          <button class="btn ghost" id="clearHistoryBtn">Effacer l'historique</button>
+        </div>
+      </div>
+
+      <section class="stage">
+        <div class="wheel-wrap">
+          <div class="pointer"></div>
+          <canvas id="wheel" width="700" height="700"></canvas>
+          <div class="center-label">TIRAGE AU SORT</div>
+        </div>
+
+        <div class="side-card panel">
+          <div class="card-title">
+            <h3>Lots disponibles</h3>
+            <span class="small" id="prizeCount">0 lot</span>
+          </div>
+          <div id="prizeList" class="prizes"></div>
+          <button class="spin" id="spinBtn">🎡 LANCER LA ROUE</button>
+          <div class="result">
+            <div class="label">Dernier résultat</div>
+            <div class="winner" id="winner">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="history panel">
+        <div class="card-title">
+          <h3>Historique des tirages</h3>
+          <span class="small">Conservé sur cet appareil</span>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="editModal">
+  <div class="modal">
+    <h3>Modifier le lot</h3>
+    <div class="field"><label for="editPrizeName">Nom du lot</label><input id="editPrizeName"></div>
+    <div class="row">
+      <div class="field"><label for="editPrizeQty">Quantité</label><input id="editPrizeQty" type="number" min="1"></div>
+      <div class="field"><label for="editPrizeColor">Couleur</label><input id="editPrizeColor" type="color" style="height:42px;padding:4px"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="cancelEdit">Annuler</button>
+      <button class="btn primary" id="saveEdit">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = "guigui_kick_wheel_v1";
+const COLORS = ["#168fff","#17cfff","#6b5cff","#1bd6a7","#f4bd4f","#ff6a3d","#e95cff","#ff4f78"];
+
+let state = loadState();
+let selectedWheelId = state.wheels[0].id;
+let rotation = 0;
+let spinning = false;
+let editingPrizeId = null;
+
+const $ = s => document.querySelector(s);
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,8); }
+
+function defaultState(){
+  return {wheels:[
+    {id:uid(),name:"Giveaway Kick",prizes:[
+      {id:uid(),name:"1 mois de sub",qty:1,color:COLORS[0]},
+      {id:uid(),name:"5 €",qty:2,color:COLORS[1]},
+      {id:uid(),name:"10 €",qty:1,color:COLORS[2]},
+      {id:uid(),name:"Cadeau surprise",qty:1,color:COLORS[3]}
+    ],history:[]}
+  ]};
+}
+function loadState(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if(saved?.wheels?.length) return saved;
+  }catch(e){}
+  return defaultState();
+}
+function save(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+function current(){ return state.wheels.find(w=>w.id===selectedWheelId) || state.wheels[0]; }
+function toast(msg){
+  const el=$("#toast"); el.textContent=msg; el.classList.add("show");
+  clearTimeout(window._toast); window._toast=setTimeout(()=>el.classList.remove("show"),1800);
+}
+function render(){
+  const w=current();
+  $("#wheelName").value=w.name;
+  $("#currentTitle").textContent=w.name;
+  $("#wheelList").innerHTML=state.wheels.map(x=>`
+    <button class="wheel-item ${x.id===selectedWheelId?"active":""}" onclick="selectWheel('${x.id}')">
+      <span class="wheel-name">🎡 ${escapeHtml(x.name)}</span><span class="count">${x.prizes.length}</span>
+    </button>`).join("");
+  $("#prizeCount").textContent=`${w.prizes.length} lot${w.prizes.length>1?"s":""}`;
+  $("#prizeList").innerHTML=w.prizes.length ? w.prizes.map(p=>`
+    <div class="prize">
+      <span class="prize-color" style="background:${p.color};color:${p.color}"></span>
+      <div><div class="prize-name">${escapeHtml(p.name)}</div><div class="prize-meta">Quantité : ${p.qty}</div></div>
+      <div>
+        <button class="icon-btn" title="Modifier" onclick="openEdit('${p.id}')">✏️</button>
+        <button class="icon-btn" title="Supprimer" onclick="removePrize('${p.id}')">🗑️</button>
+      </div>
+    </div>`).join("") : `<div class="empty">Aucun lot.<br>Ajoute ton premier lot à gauche.</div>`;
+  $("#winner").textContent=w.history[0]?.winner || "—";
+  renderHistory(w);
+  drawWheel();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function renderHistory(w){
+  $("#historyList").innerHTML=w.history.length ? w.history.map(h=>`
+    <div class="history-row"><span>🏆 ${escapeHtml(h.winner)}</span><span>${new Date(h.date).toLocaleString("fr-FR")}</span></div>
+  `).join("") : `<div class="empty">Aucun tirage effectué pour le moment.</div>`;
+}
+function selectWheel(id){selectedWheelId=id; rotation=0; render();}
+window.selectWheel=selectWheel;
+
+function addWheel(){
+  const name=prompt("Nom de la nouvelle roue :",`Roue ${state.wheels.length+1}`);
+  if(!name?.trim()) return;
+  const w={id:uid(),name:name.trim(),prizes:[],history:[]};
+  state.wheels.push(w); selectedWheelId=w.id; save(); render(); toast("Nouvelle roue créée.");
+}
+$("#addWheelBtn").onclick=addWheel;
+
+$("#renameBtn").onclick=()=>{
+  const w=current(), name=$("#wheelName").value.trim();
+  if(!name) return;
+  w.name=name; save(); render(); toast("Roue renommée.");
+};
+$("#deleteWheelBtn").onclick=()=>{
+  if(state.wheels.length===1){toast("Impossible de supprimer la dernière roue. Crée une autre roue avant de supprimer celle-ci.");return}
+  const w=current();
+  if(!confirm(`Supprimer définitivement la roue « ${w.name} » et son historique ?`)) return;
+  state.wheels=state.wheels.filter(x=>x.id!==w.id); selectedWheelId=state.wheels[0].id; save(); render(); toast("Roue supprimée.");
+};
+$("#addPrizeBtn").onclick=()=>{
+  const name=$("#prizeName").value.trim(), qty=Math.max(1,parseInt($("#prizeQty").value)||1);
+  if(!name){toast("Indique le nom du lot.");return}
+  const w=current();
+  w.prizes.push({id:uid(),name,qty,color:$("#prizeColor").value});
+  $("#prizeName").value=""; $("#prizeQty").value=1;
+  save();render();toast("Lot ajouté.");
+};
+function removePrize(id){
+  const w=current(), p=w.prizes.find(x=>x.id===id);
+  if(!p || !confirm(`Supprimer « ${p.name} » ?`)) return;
+  w.prizes=w.prizes.filter(x=>x.id!==id); save();render();toast("Lot supprimé.");
+}
+window.removePrize=removePrize;
+
+function openEdit(id){
+  const p=current().prizes.find(x=>x.id===id); if(!p)return;
+  editingPrizeId=id;
+  $("#editPrizeName").value=p.name; $("#editPrizeQty").value=p.qty; $("#editPrizeColor").value=p.color;
+  $("#editModal").classList.add("show");
+}
+window.openEdit=openEdit;
+$("#cancelEdit").onclick=()=>$("#editModal").classList.remove("show");
+$("#saveEdit").onclick=()=>{
+  const p=current().prizes.find(x=>x.id===editingPrizeId);
+  if(p){
+    p.name=$("#editPrizeName").value.trim()||p.name;
+    p.qty=Math.max(1,parseInt($("#editPrizeQty").value)||1);
+    p.color=$("#editPrizeColor").value;
+    save();render();toast("Lot modifié.");
+  }
+  $("#editModal").classList.remove("show");
+};
+
+$("#shuffleBtn").onclick=()=>{
+  const p=current().prizes;
+  for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}
+  save();render();toast("Lots mélangés.");
+};
+$("#clearHistoryBtn").onclick=()=>{
+  if(!current().history.length)return;
+  if(confirm("Effacer l'historique de cette roue ?")){current().history=[];save();render();toast("Historique effacé.")}
+};
+
+function expandedPrizes(){
+  const out=[]; current().prizes.forEach(p=>{for(let i=0;i<p.qty;i++)out.push(p)}); return out;
+}
+function drawWheel(){
+  const canvas=$("#wheel"), ctx=canvas.getContext("2d"), dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=700*dpr; canvas.height=700*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=700,H=700,cx=350,cy=350,r=300;
+  ctx.clearRect(0,0,W,H);
+  const items=expandedPrizes();
+  if(!items.length){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle="#071d34";ctx.fill();
+    ctx.strokeStyle="#1c5f8d";ctx.lineWidth=5;ctx.stroke();
+    ctx.fillStyle="#6f98b4";ctx.font="700 20px Inter, sans-serif";ctx.textAlign="center";ctx.fillText("AJOUTE DES LOTS",cx,cy+7);return;
+  }
+  const angle=(Math.PI*2)/items.length;
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(rotation);
+  items.forEach((p,i)=>{
+    const a0=-Math.PI/2+i*angle,a1=a0+angle;
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,a0,a1);ctx.closePath();
+    ctx.fillStyle=p.color;ctx.fill();
+    ctx.strokeStyle="rgba(1,12,25,.55)";ctx.lineWidth=3;ctx.stroke();
+    ctx.save();ctx.rotate(a0+angle/2);ctx.textAlign="right";ctx.fillStyle="#fff";
+    ctx.font=`900 ${Math.max(12,Math.min(21,230/items.length+9))}px Inter, sans-serif`;
+    ctx.shadowColor="#001";ctx.shadowBlur=4;
+    const text=p.name.length>22?p.name.slice(0,21)+"…":p.name;
+    ctx.fillText(text,r-18,6);ctx.restore();
+  });
+  ctx.restore();
+  ctx.beginPath();ctx.arc(cx,cy,63,0,Math.PI*2);ctx.fillStyle="#04162b";ctx.fill();
+  ctx.strokeStyle="#4cd5ff";ctx.lineWidth=5;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,48,0,Math.PI*2);ctx.fillStyle="#0b3c69";ctx.fill();
+  ctx.fillStyle="#dff9ff";ctx.font="900 16px Inter,sans-serif";ctx.textAlign="center";ctx.fillText("GUIGUI",cx,cy+6);
+}
+window.addEventListener("resize",drawWheel);
+
+$("#spinBtn").onclick=spin;
+function spin(){
+  if(spinning)return;
+  const items=expandedPrizes();
+  if(!items.length){toast("Ajoute au moins un lot.");return}
+  spinning=true;$("#spinBtn").disabled=true;
+  const winnerIndex=Math.floor(Math.random()*items.length);
+  const slice=(Math.PI*2)/items.length;
+  // Pointer is at -90°. Make the chosen slice center land there.
+  const target = -slice*(winnerIndex+0.5);
+  const currentNorm = rotation % (Math.PI*2);
+  let delta = target-currentNorm;
+  while(delta<0) delta += Math.PI*2;
+  const extra=(Math.PI*2)*(5+Math.floor(Math.random()*3));
+  const start=rotation, end=rotation+delta+extra, duration=4800;
+  const t0=performance.now();
+  function ease(t){return 1-Math.pow(1-t,4)}
+  function frame(now){
+    const t=Math.min(1,(now-t0)/duration);
+    rotation=start+(end-start)*ease(t);
+    drawWheel();
+    if(t<1){requestAnimationFrame(frame);return}
+    rotation=end; spinning=false; $("#spinBtn").disabled=false;
+    const winner=items[winnerIndex];
+    current().history.unshift({id:uid(),winner:winner.name,date:new Date().toISOString()});
+    // V2 : le lot reste disponible après le tirage.
+    // Sa quantité et sa présence dans la roue ne sont jamais modifiées.
+    save();render();toast(`🏆 Gagnant : ${winner.name}`);
+  }
+  requestAnimationFrame(frame);
+}
+
+render();
+</script>
+</body>
+</html>
