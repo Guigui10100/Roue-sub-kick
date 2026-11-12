@@ -191,6 +191,17 @@ canvas{width:min(560px,88vw);height:min(560px,88vw);max-width:560px;max-height:5
  .pointer{top:calc(50% - 238px)}.top-toggle{padding:9px 11px}
 }
 @media(max-width:800px){body.management-hidden .layout{grid-template-columns:1fr}}
+body.management-hidden .layout{
+  grid-template-columns:1fr;
+}
+
+body.management-hidden .sidebar{
+  display:none;
+}
+
+body.management-hidden .content{
+  width:100%;
+}
 @media(max-width:520px){.app{padding:10px}.content{padding:14px}.wheel-wrap{min-height:390px}.pointer{top:calc(50% - 180px);border-left-width:14px;border-right-width:14px;border-top-width:34px}.brand h1{font-size:17px}.logo{width:48px;height:48px}}
 
 .winner-overlay{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:24px;background:radial-gradient(circle at center,rgba(0,145,255,.18),rgba(0,2,8,.88) 55%),rgba(0,0,0,.82);backdrop-filter:blur(10px)}
